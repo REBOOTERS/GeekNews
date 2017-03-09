@@ -16,12 +16,11 @@ import com.codeest.geeknews.app.Constants;
 import com.codeest.geeknews.base.BaseFragment;
 import com.codeest.geeknews.component.ACache;
 import com.codeest.geeknews.component.RxBus;
-import com.codeest.geeknews.model.bean.NightModeEvent;
+import com.codeest.geeknews.model.event.NightModeEvent;
 import com.codeest.geeknews.model.bean.VersionBean;
 import com.codeest.geeknews.presenter.SettingPresenter;
 import com.codeest.geeknews.presenter.contract.SettingContract;
 import com.codeest.geeknews.ui.main.activity.MainActivity;
-import com.codeest.geeknews.util.LogUtil;
 import com.codeest.geeknews.util.ShareUtil;
 import com.codeest.geeknews.util.SharedPreferenceUtil;
 import com.codeest.geeknews.util.SnackbarUtil;
@@ -149,7 +148,7 @@ public class SettingFragment extends BaseFragment<SettingPresenter> implements C
             public void onClick(DialogInterface dialogInterface, int i) {
                 Activity mActivity = getActivity();
                 if (mActivity instanceof MainActivity) {
-                    ((MainActivity) mActivity).requestPermission();
+                    ((MainActivity) mActivity).checkPermissions();
                 }
             }
         });

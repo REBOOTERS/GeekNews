@@ -1,9 +1,14 @@
 package com.codeest.geeknews.di.module;
 
 import com.codeest.geeknews.app.App;
-import com.codeest.geeknews.di.ContextLife;
 import com.codeest.geeknews.model.db.RealmHelper;
 import com.codeest.geeknews.model.http.RetrofitHelper;
+import com.codeest.geeknews.model.http.api.GankApis;
+import com.codeest.geeknews.model.http.api.GoldApis;
+import com.codeest.geeknews.model.http.api.MyApis;
+import com.codeest.geeknews.model.http.api.VtexApis;
+import com.codeest.geeknews.model.http.api.WeChatApis;
+import com.codeest.geeknews.model.http.api.ZhihuApis;
 
 import javax.inject.Singleton;
 
@@ -24,15 +29,16 @@ public class AppModule {
 
     @Provides
     @Singleton
-    @ContextLife("Application")
     App provideApplicationContext() {
         return application;
     }
 
     @Provides
     @Singleton
-    RetrofitHelper provideRetrofitHelper() {
-        return new RetrofitHelper();
+    RetrofitHelper provideRetrofitHelper(ZhihuApis zhihuApiService, GankApis gankApiService, WeChatApis wechatApiService,
+                                         MyApis myApiService, GoldApis goldApiService, VtexApis vtexApiService) {
+        return new RetrofitHelper(zhihuApiService, gankApiService, wechatApiService,
+                myApiService, goldApiService, vtexApiService);
     }
 
     @Provides

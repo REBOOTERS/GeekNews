@@ -5,11 +5,13 @@ import com.codeest.geeknews.base.RxPresenter;
 import com.codeest.geeknews.component.RxBus;
 import com.codeest.geeknews.model.bean.GankItemBean;
 import com.codeest.geeknews.model.bean.GankSearchItemBean;
-import com.codeest.geeknews.model.bean.SearchEvent;
-import com.codeest.geeknews.model.http.GankHttpResponse;
+import com.codeest.geeknews.model.event.SearchEvent;
 import com.codeest.geeknews.model.http.RetrofitHelper;
+import com.codeest.geeknews.model.http.response.GankHttpResponse;
 import com.codeest.geeknews.presenter.contract.TechContract;
+import com.codeest.geeknews.ui.gank.fragment.GankMainFragment;
 import com.codeest.geeknews.util.RxUtil;
+import com.codeest.geeknews.widget.CommonSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -27,15 +28,12 @@ import rx.functions.Func1;
 public class TechPresenter extends RxPresenter<TechContract.View> implements TechContract.Presenter{
 
     private RetrofitHelper mRetrofitHelper;
-
-    public static final String TECH_ANDROID = "Android";
-    public static final String TECH_IOS = "iOS";
-    public static final String TECH_WEB = "前端";
     private static final int NUM_OF_PAGE = 20;
 
     private int currentPage = 1;
     private String queryStr = null;
-    private String currentTech = TECH_ANDROID;
+    private String currentTech = GankMainFragment.tabTitle[0];
+    private int currentType = Constants.TYPE_ANDROID;
 
     @Inject
     public TechPresenter(RetrofitHelper mRetrofitHelper) {
@@ -49,7 +47,7 @@ public class TechPresenter extends RxPresenter<TechContract.View> implements Tec
                 .filter(new Func1<SearchEvent, Boolean>() {
                     @Override
                     public Boolean call(SearchEvent searchEvent) {
-                        return searchEvent.getType() == getTechType(currentTech);
+                        return searchEvent.getType() == currentType;
                     }
                 })
                 .map(new Func1<SearchEvent, String>() {
@@ -58,16 +56,11 @@ public class TechPresenter extends RxPresenter<TechContract.View> implements Tec
                         return searchEvent.getQuery();
                     }
                 })
-                .subscribe(new Action1<String>() {
+                .subscribe(new CommonSubscriber<String>(mView, "搜索失败") {
                     @Override
-                    public void call(String s) {
+                    public void onNext(String s) {
                         queryStr = s;
                         getSearchTechData();
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        mView.showError("搜索失败");
                     }
                 });
         addSubscrebe(rxSubscription);
@@ -94,37 +87,28 @@ public class TechPresenter extends RxPresenter<TechContract.View> implements Tec
                         return newList;
                     }
                 })
-                .subscribe(new Action1<List<GankItemBean>>() {
+                .subscribe(new CommonSubscriber<List<GankItemBean>>(mView) {
                     @Override
-                    public void call(List<GankItemBean> gankItemBeen) {
+                    public void onNext(List<GankItemBean> gankItemBeen) {
                         mView.showContent(gankItemBeen);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
                     }
                 });
         addSubscrebe(rxSubscription);
     }
 
     @Override
-    public void getGankData(String tech) {
+    public void getGankData(String tech, int type) {
         queryStr = null;
         currentPage = 1;
         currentTech = tech;
+        currentType = type;
         Subscription rxSubscription = mRetrofitHelper.fetchTechList(tech,NUM_OF_PAGE,currentPage)
                 .compose(RxUtil.<GankHttpResponse<List<GankItemBean>>>rxSchedulerHelper())
                 .compose(RxUtil.<List<GankItemBean>>handleResult())
-                .subscribe(new Action1<List<GankItemBean>>() {
+                .subscribe(new CommonSubscriber<List<GankItemBean>>(mView) {
                     @Override
-                    public void call(List<GankItemBean> gankItemBeen) {
+                    public void onNext(List<GankItemBean> gankItemBeen) {
                         mView.showContent(gankItemBeen);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        mView.showError("数据加载失败ヽ(≧Д≦)ノ");
                     }
                 });
         addSubscrebe(rxSubscription);
@@ -139,15 +123,10 @@ public class TechPresenter extends RxPresenter<TechContract.View> implements Tec
         Subscription rxSubscription = mRetrofitHelper.fetchTechList(tech,NUM_OF_PAGE,++currentPage)
                 .compose(RxUtil.<GankHttpResponse<List<GankItemBean>>>rxSchedulerHelper())
                 .compose(RxUtil.<List<GankItemBean>>handleResult())
-                .subscribe(new Action1<List<GankItemBean>>() {
+                .subscribe(new CommonSubscriber<List<GankItemBean>>(mView, "加载更多数据失败ヽ(≧Д≦)ノ") {
                     @Override
-                    public void call(List<GankItemBean> gankItemBeen) {
+                    public void onNext(List<GankItemBean> gankItemBeen) {
                         mView.showMoreContent(gankItemBeen);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        mView.showError("加载更多数据失败ヽ(≧Д≦)ノ");
                     }
                 });
         addSubscrebe(rxSubscription);
@@ -173,15 +152,10 @@ public class TechPresenter extends RxPresenter<TechContract.View> implements Tec
                         return newList;
                     }
                 })
-                .subscribe(new Action1<List<GankItemBean>>() {
+                .subscribe(new CommonSubscriber<List<GankItemBean>>(mView) {
                     @Override
-                    public void call(List<GankItemBean> gankItemBeen) {
+                    public void onNext(List<GankItemBean> gankItemBeen) {
                         mView.showMoreContent(gankItemBeen);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
                     }
                 });
         addSubscrebe(rxSubscription);
@@ -192,31 +166,12 @@ public class TechPresenter extends RxPresenter<TechContract.View> implements Tec
         Subscription rxSubscription = mRetrofitHelper.fetchRandomGirl(1)
                 .compose(RxUtil.<GankHttpResponse<List<GankItemBean>>>rxSchedulerHelper())
                 .compose(RxUtil.<List<GankItemBean>>handleResult())
-                .subscribe(new Action1<List<GankItemBean>>() {
+                .subscribe(new CommonSubscriber<List<GankItemBean>>(mView, "加载封面失败") {
                     @Override
-                    public void call(List<GankItemBean> gankItemBean) {
+                    public void onNext(List<GankItemBean> gankItemBean) {
                         mView.showGirlImage(gankItemBean.get(0).getUrl(), gankItemBean.get(0).getWho());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        mView.showError("加载封面失败");
                     }
                 });
         addSubscrebe(rxSubscription);
-    }
-
-    public static int getTechType(String tech) {
-        switch (tech) {
-            case TechPresenter.TECH_ANDROID:
-                return Constants.TYPE_ANDROID;
-            case TechPresenter.TECH_IOS:
-                return Constants.TYPE_IOS;
-            case TechPresenter.TECH_WEB:
-                return Constants.TYPE_WEB;
-            case WechatPresenter.TECH_WECHAT:
-                return Constants.TYPE_WECHAT;
-        }
-        return Constants.TYPE_ANDROID;
     }
 }

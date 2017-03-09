@@ -25,11 +25,15 @@ public class Constants {
 
     public static final int TYPE_GANK = 107;
 
-    public static final int TYPE_SETTING = 108;
+    public static final int TYPE_GOLD = 108;
 
-    public static final int TYPE_LIKE = 109;
+    public static final int TYPE_VTEX = 109;
 
-    public static final int TYPE_ABOUT = 110;
+    public static final int TYPE_SETTING = 110;
+
+    public static final int TYPE_LIKE = 111;
+
+    public static final int TYPE_ABOUT = 112;
 
     //================= KEY ====================
 
@@ -38,6 +42,12 @@ public class Constants {
 
     public static final String KEY_ALIPAY = "aex07566wvayrgxicnaraae";
 
+    public static final String LEANCLOUD_ID = "mhke0kuv33myn4t4ghuid4oq2hjj12li374hvcif202y5bm6";
+
+    public static final String LEANCLOUD_SIGN = "badc5461a25a46291054b902887a68eb,1480438132702";
+
+    public static final String BUGLY_ID = "257700f3f8";
+
     //================= PATH ====================
 
     public static final String PATH_DATA = App.getInstance().getCacheDir().getAbsolutePath() + File.separator + "data";
@@ -45,10 +55,6 @@ public class Constants {
     public static final String PATH_CACHE = PATH_DATA + "/NetCache";
 
     public static final String PATH_SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "codeest" + File.separator + "GeekNews";
-
-    //================= UMENG ====================
-
-    public static final String EVENT_TAB_HOME = "tab_home";
 
     //================= PREFERENCE ====================
 
@@ -63,4 +69,35 @@ public class Constants {
     public static final String SP_LIKE_POINT = "like_point";
 
     public static final String SP_VERSION_POINT = "version_point";
+
+    public static final String SP_MANAGER_POINT = "manager_point";
+
+    //================= INTENT ====================
+    public static final String IT_GANK_TYPE = "type";
+
+    public static final String IT_GANK_TYPE_CODE = "type_code";
+
+    public static final String IT_DETAIL_TITLE = "title";
+
+    public static final String IT_DETAIL_URL = "url";
+
+    public static final String IT_DETAIL_IMG_URL = "img_url";
+
+    public static final String IT_DETAIL_ID = "id";
+
+    public static final String IT_DETAIL_TYPE = "type";
+
+    public static final String IT_GOLD_TYPE = "type";
+
+    public static final String IT_GOLD_TYPE_STR = "type_str";
+
+    public static final String IT_GOLD_MANAGER = "manager";
+
+    public static final String IT_VTEX_TYPE = "type";
+
+    public static final String IT_VTEX_TOPIC_ID = "id";
+
+    public static final String IT_VTEX_REPLIES_TOP = "top_info";
+
+    public static final String IT_VTEX_NODE_NAME = "node_name";
 }

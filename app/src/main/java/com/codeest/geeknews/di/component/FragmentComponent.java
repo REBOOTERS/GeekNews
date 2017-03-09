@@ -2,12 +2,15 @@ package com.codeest.geeknews.di.component;
 
 import android.app.Activity;
 
-import com.codeest.geeknews.di.FragmentScope;
+import com.codeest.geeknews.di.scope.FragmentScope;
 import com.codeest.geeknews.di.module.FragmentModule;
 import com.codeest.geeknews.ui.gank.fragment.GirlFragment;
 import com.codeest.geeknews.ui.gank.fragment.TechFragment;
+import com.codeest.geeknews.ui.gold.fragment.GoldMainFragment;
+import com.codeest.geeknews.ui.gold.fragment.GoldPagerFragment;
 import com.codeest.geeknews.ui.main.fragment.LikeFragment;
 import com.codeest.geeknews.ui.main.fragment.SettingFragment;
+import com.codeest.geeknews.ui.vtex.fragment.VtexPagerFragment;
 import com.codeest.geeknews.ui.wechat.fragment.WechatMainFragment;
 import com.codeest.geeknews.ui.zhihu.fragment.CommentFragment;
 import com.codeest.geeknews.ui.zhihu.fragment.DailyFragment;
@@ -46,4 +49,10 @@ public interface FragmentComponent {
     void inject(WechatMainFragment wechatMainFragment);
 
     void inject(SettingFragment settingFragment);
+
+    void inject(GoldMainFragment goldMainFragment);
+
+    void inject(GoldPagerFragment goldPagerFragment);
+
+    void inject(VtexPagerFragment vtexPagerFragment);
 }
